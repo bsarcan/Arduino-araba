@@ -1,27 +1,26 @@
-#include<AFMotor.h>
+#include<AFMotor.h>  // Motor sürücümüzün kütüphanesi
 
-AF_DCMotor motorA(1);
-AF_DCMotor motorB(2);
+AF_DCMotor motorA(1);  //Motorları tanımlıyoruz. 
+AF_DCMotor motorB(2);  //Parantez içindeki numara çıkış pinini gösterir.
 AF_DCMotor motorC(3);
 AF_DCMotor motorD(4);
 
 
-int state;
+int state; //Bluetooth sinyalleri için değişken.
 
 void setup() {
 
-  //motoryon.setSpeed(255);
-  //motoryon.run(RELEASE);
-  Serial.begin(9600);
+  Serial.begin(9600);  //Port açmak için bu kod kullanıldı.
   
 }
 
 void loop() {
 
-  if (Serial.available() > 0){
+  if (Serial.available() > 0){       //Bluetoothdan gelen veriler.
     state = Serial.read();
   }
 
+  //Burda 0-4 arası bir değer girerek motorların hızını belirliyoruz.
   if (state == '0'){
     motorA.setSpeed(0);
     motorB.setSpeed(0);
@@ -53,31 +52,38 @@ void loop() {
     motorD.setSpeed(255);
   }
  
-
+//Gelen komutlara göre hareket sağlanayor.
+  //'F' komutu aracın ileri gitmesi için.
   if (state == 'F'){
     motorA.run(FORWARD);
     motorB.run(FORWARD);
     motorC.run(FORWARD);
     motorD.run(FORWARD);
   }
+  //'B' komutu aracın geri gitmesi için.
   else if (state == 'B'){
     motorA.run(BACKWARD);
     motorB.run(BACKWARD);
     motorC.run(BACKWARD);
     motorD.run(BACKWARD);
   }
+  //'L' komutu aracın sola dönmesi için.
+  //Sola dönüş için soldaki motorlar geri gider.
   else if (state == 'L'){
     motorA.run(FORWARD);
     motorB.run(BACKWARD);
     motorC.run(BACKWARD);
     motorD.run(FORWARD);
   }
+  //'R' komutu aracın sağa dönmesi için.
+  //Sağa dönüş için sağdaki motorlar geri gider.
   else if (state == 'R'){
     motorA.run(BACKWARD);
     motorB.run(FORWARD);
     motorC.run(FORWARD); 
     motorD.run(BACKWARD);
   }
+  //'S' komutu aracın durması için.
   else if (state == 'S'){
     motorA.run(RELEASE);
     motorB.run(RELEASE);
